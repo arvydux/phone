@@ -3,15 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\PassportAuthController;
-
-
-Route::post('register', [PassportAuthController::class, 'register']);
-Route::post('login', [PassportAuthController::class, 'login']);
-
-Route::middleware('auth:api')->group(function () {
-
-});
-
+use App\Http\Controllers\API\PhoneNumberController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,6 +15,11 @@ Route::middleware('auth:api')->group(function () {
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('register', [PassportAuthController::class, 'register']);
+Route::post('login', [PassportAuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('get-user', [PassportAuthController::class, 'userInfo']);
+    Route::apiResource('phoneNumbers', PhoneNumberController::class);
 });
+
