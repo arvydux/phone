@@ -22,7 +22,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::resource('phoneNumbers', PhoneNumberController::class)->middleware(['auth']);
+Route::resource('phoneNumbers', PhoneNumberController::class);
 Route::get('phoneNumbers/{phoneNumber}/share', [PhoneNumberController::class, 'share'])
     ->name('phoneNumbers.share')->middleware(['auth']);
 Route::patch('phoneNumbers/{phoneNumber}/makeShare', [PhoneNumberController::class, 'makeShare'])
