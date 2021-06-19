@@ -15,8 +15,8 @@
                 <td># ID</td>
                 <td>Name</td>
                 <td>Phone number</td>
-                <td>Record Owner</td>
-                <td>Action</td>
+                <td>Record owner</td>
+                <td>Actions</td>
             </tr>
             </thead>
             <tbody>
@@ -31,8 +31,8 @@
                         @endif
                     </td>
                     <td class="text-center">
+                        <a href="{{ route('phoneNumbers.show', $phoneNumber->id)}}" class="btn btn-success btn-sm">Show</a>
                         @if ($phoneNumber->user_id == auth()->id())
-
                         <a href="{{ route('phoneNumbers.edit', $phoneNumber->id)}}" class="btn btn-success btn-sm">Edit</a>
                         <form action="{{ route('phoneNumbers.destroy', $phoneNumber->id)}}" method="post" style="display: inline-block">
                             @csrf

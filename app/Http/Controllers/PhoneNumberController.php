@@ -61,7 +61,9 @@ class PhoneNumberController extends Controller
      */
     public function show($id)
     {
-        //
+        $phoneNumber = PhoneNumber::findOrFail($id);
+        $users= User::where('id', '!=', auth()->id())->get();
+        return view('phoneNumbers.show', compact('phoneNumber', 'users'));
     }
 
     /**
