@@ -15,6 +15,7 @@
                 <td># ID</td>
                 <td>Name</td>
                 <td>Phone number</td>
+                <td>Record Owner</td>
                 <td>Action</td>
             </tr>
             </thead>
@@ -24,13 +25,24 @@
                     <td>{{$phoneNumber->id}}</td>
                     <td>{{$phoneNumber->name}}</td>
                     <td>{{$phoneNumber->phonenumber}}</td>
+                    <td>{{$phoneNumber->user->name}}
+                        @if ($phoneNumber->user_id == auth()->id())
+                            <b>(Me)</b>
+                        @endif
+                    </td>
                     <td class="text-center">
+                        @if ($phoneNumber->user_id == auth()->id())
+
                         <a href="{{ route('phoneNumbers.edit', $phoneNumber->id)}}" class="btn btn-success btn-sm">Edit</a>
                         <form action="{{ route('phoneNumbers.destroy', $phoneNumber->id)}}" method="post" style="display: inline-block">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger btn-sm" type="submit">Delete</button>
                         </form>
+                        <a href="{{ route('phoneNumbers.share', $phoneNumber->id)}}" class="btn btn-primary btn-sm">Share</a>
+                        @else
+                            <p class="text-danger">Not allowed any actions</p>
+                        @endif
                     </td>
                 </tr>
             @endforeach

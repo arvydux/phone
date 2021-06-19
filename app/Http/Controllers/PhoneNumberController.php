@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\PhoneNumber;
 
@@ -14,8 +15,9 @@ class PhoneNumberController extends Controller
      */
     public function index()
     {
-        $phoneNumbers = PhoneNumber::all()->where('user_id', auth()->id());;
-
+        $phoneNumbers = PhoneNumber::with('user')
+            ->where('user_id', auth()->id())
+            ->orWhereJsonContains('shared_user_ids', (string)auth()->id())->get();
         return view('phoneNumbers.index', compact('phoneNumbers'));
     }
 
@@ -90,6 +92,25 @@ class PhoneNumberController extends Controller
 
         PhoneNumber::whereId($id)->update($data);
         return redirect('/phoneNumbers')->with('success', 'Phone number updated');
+    }
+
+
+    public function share($id)
+    {
+        $phoneNumber = PhoneNumber::findOrFail($id);
+        $users= User::where('id', '!=', auth()->id())->get();
+        return view('phoneNumbers.share', compact('phoneNumber', 'users'));
+    }
+
+    public function makeShare(Request $request, $id)
+    {
+        $userIDs = $request->input('user-id');
+        $phoneNumber = PhoneNumber::find($id);
+        $phoneNumber->shared_user_ids = $userIDs;
+        $phoneNumber->save();
+        return redirect('/phoneNumbers')->with('success', 'Phone number shared');
+        //$phoneNumber = PhoneNumber::findOrFail($id);
+        //return view('phoneNumbers.makeShare', compact('phoneNumber'));
     }
 
     /**

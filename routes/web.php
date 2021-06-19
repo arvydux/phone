@@ -23,5 +23,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::resource('phoneNumbers', PhoneNumberController::class)->middleware(['auth']);
+Route::get('phoneNumbers/{phoneNumber}/share', [PhoneNumberController::class, 'share'])
+    ->name('phoneNumbers.share')->middleware(['auth']);
+Route::patch('phoneNumbers/{phoneNumber}/makeShare', [PhoneNumberController::class, 'makeShare'])
+    ->name('phoneNumbers.makeShare')->middleware(['auth']);
+
 
 require __DIR__.'/auth.php';
