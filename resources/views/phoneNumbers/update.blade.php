@@ -16,7 +16,7 @@
                     </ul>
                 </div>
             @endif
-            <form method="post" action="{{ route('phoneNumbers.update', $phoneNumber->id) }}">
+            <form method="post" action="{{ route('phone-numbers.update', $phoneNumber->id) }}">
                 <div class="form-group">
                     @csrf
                     @method('PATCH')

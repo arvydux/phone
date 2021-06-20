@@ -18,7 +18,7 @@ class PhoneNumberController extends Controller
         $phoneNumbers = PhoneNumber::with('user')
             ->where('user_id', auth()->id())
             ->orWhereJsonContains('shared_user_ids', (string)auth()->id())->get();
-        return view('phoneNumbers.index', compact('phoneNumbers'));
+        return view('phonenumbers.index', compact('phoneNumbers'));
     }
 
     /**
@@ -28,7 +28,7 @@ class PhoneNumberController extends Controller
      */
     public function create()
     {
-        return view('phoneNumbers.create');
+        return view('phonenumbers.create');
     }
 
     /**
@@ -50,7 +50,7 @@ class PhoneNumberController extends Controller
             'user_id' => auth()->id()
         ]);
         $phoneNumber->save();
-        return redirect('/phoneNumbers')->with('success', 'Phone number saved!');
+        return redirect('/phone-numbers')->with('success', 'Phone number saved!');
     }
 
     /**
@@ -63,7 +63,7 @@ class PhoneNumberController extends Controller
     {
         $phoneNumber = PhoneNumber::findOrFail($id);
         $users= User::where('id', '!=', auth()->id())->get();
-        return view('phoneNumbers.show', compact('phoneNumber', 'users'));
+        return view('phonenumbers.show', compact('phoneNumber', 'users'));
     }
 
     /**
@@ -75,7 +75,7 @@ class PhoneNumberController extends Controller
     public function edit($id)
     {
         $phoneNumber = PhoneNumber::findOrFail($id);
-        return view('phoneNumbers.update', compact('phoneNumber'));
+        return view('phonenumbers.update', compact('phoneNumber'));
     }
 
     /**
@@ -93,7 +93,7 @@ class PhoneNumberController extends Controller
         ]);
 
         PhoneNumber::whereId($id)->update($data);
-        return redirect('/phoneNumbers')->with('success', 'Phone number updated');
+        return redirect('/phone-numbers')->with('success', 'Phone number updated');
     }
 
 
@@ -101,7 +101,7 @@ class PhoneNumberController extends Controller
     {
         $phoneNumber = PhoneNumber::findOrFail($id);
         $users= User::where('id', '!=', auth()->id())->get();
-        return view('phoneNumbers.share', compact('phoneNumber', 'users'));
+        return view('phonenumbers.share', compact('phoneNumber', 'users'));
     }
 
     public function makeShare(Request $request, $id)
@@ -110,7 +110,7 @@ class PhoneNumberController extends Controller
         $phoneNumber = PhoneNumber::find($id);
         $phoneNumber->shared_user_ids = $userIDs;
         $phoneNumber->save();
-        return redirect('/phoneNumbers')->with('success', 'Phone number shared');
+        return redirect('/phone-numbers')->with('success', 'Phone number shared');
         //$phoneNumber = PhoneNumber::findOrFail($id);
         //return view('phoneNumbers.makeShare', compact('phoneNumber'));
     }
@@ -126,6 +126,6 @@ class PhoneNumberController extends Controller
         $phoneNumber = PhoneNumber::findOrFail($id);
         $phoneNumber->delete();
 
-        return redirect('/phoneNumbers')->with('success', 'Phone number deleted');
+        return redirect('/phone-numbers')->with('success', 'Phone number deleted');
     }
 }

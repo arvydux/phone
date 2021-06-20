@@ -16,7 +16,7 @@
                     </ul>
                 </div>
             @endif
-            <form method="post" action="{{ route('phoneNumbers.makeShare', $phoneNumber->id) }}">
+            <form method="post" action="{{ route('phone-numbers.makeShare', $phoneNumber->id) }}">
                 <div class="form-group">
                     @csrf
                     @method('PATCH')

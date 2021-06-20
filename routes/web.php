@@ -22,11 +22,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::resource('phoneNumbers', PhoneNumberController::class);
-Route::get('phoneNumbers/{phoneNumber}/share', [PhoneNumberController::class, 'share'])
-    ->name('phoneNumbers.share')->middleware(['auth']);
-Route::patch('phoneNumbers/{phoneNumber}/makeShare', [PhoneNumberController::class, 'makeShare'])
-    ->name('phoneNumbers.makeShare')->middleware(['auth']);
+Route::resource('phone-numbers', PhoneNumberController::class)->middleware(['auth']);
+Route::get('phone-numbers/{phonenumber}/share', [PhoneNumberController::class, 'share'])
+    ->name('phone-numbers.share')->middleware(['auth']);
+Route::patch('phone-numbers/{phonenumber}/makeShare', [PhoneNumberController::class, 'makeShare'])
+    ->name('phone-numbers.makeShare')->middleware(['auth']);
 
 
 require __DIR__.'/auth.php';

@@ -31,15 +31,15 @@
                         @endif
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('phoneNumbers.show', $phoneNumber->id)}}" class="btn btn-success btn-sm">Show</a>
+                        <a href="{{ route('phone-numbers.show', $phoneNumber->id)}}" class="btn btn-success btn-sm">Show</a>
                         @if ($phoneNumber->user_id == auth()->id())
-                        <a href="{{ route('phoneNumbers.edit', $phoneNumber->id)}}" class="btn btn-success btn-sm">Edit</a>
-                        <form action="{{ route('phoneNumbers.destroy', $phoneNumber->id)}}" method="post" style="display: inline-block">
+                        <a href="{{ route('phone-numbers.edit', $phoneNumber->id)}}" class="btn btn-success btn-sm">Edit</a>
+                        <form action="{{ route('phone-numbers.destroy', $phoneNumber->id)}}" method="post" style="display: inline-block">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger btn-sm" type="submit">Delete</button>
                         </form>
-                        <a href="{{ route('phoneNumbers.share', $phoneNumber->id)}}" class="btn btn-primary btn-sm">Share</a>
+                        <a href="{{ route('phone-numbers.share', $phoneNumber->id)}}" class="btn btn-primary btn-sm">Share</a>
                         @else
                             <p class="text-danger">Not allowed any actions</p>
                         @endif
