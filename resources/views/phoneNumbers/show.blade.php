@@ -18,23 +18,23 @@
             @endif
             <form method="get" action="{{ route('phone-numbers.index', $phoneNumber->id) }}">
                 <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" class="form-control" value="{{ $phoneNumber->name }}" />
+                    <label><b>Name</b></label>
+                    <input type="text" name="name" class="form-control" value="{{ $phoneNumber->name }}" />
                 </div>
                 <div class="form-group">
-                    <label>Phone</label>
-                    <input type="text"  class="form-control" value="{{ $phoneNumber->phonenumber }}" />
+                    <label><b>Phone</b></label>
+                    <input type="text" name="phone"  class="form-control" value="{{ $phoneNumber->phonenumber }}" />
                 </div>
                 <div class="form-group">
-                    <label>Created by</label>
-                    <input type="text"  class="form-control" value="{{ $phoneNumber->user->name}}" />
+                    <label><b>Created by</b></label>
+                    <input type="text"  name="owner" class="form-control" value="{{ $phoneNumber->user->name}}" />
                 </div>
                 <div class="form-group">
-                    <label>Last updated at</label>
-                    <input type="text"  class="form-control" value="{{ $phoneNumber->updated_at }}" />
+                    <label><b>Last updated at</b></label>
+                    <input type="text"  name="updated-at" class="form-control" value="{{ $phoneNumber->updated_at }}" />
                 </div>
                 <div class="form-group">
-                    <label>Shared with:</label><br>
+                    <label><b>Shared with:</b></label><br>
                     @foreach ($users as $user)
                         @if ($phoneNumber->shared_user_ids != null)
                             @if (in_array($user->id, json_decode($phoneNumber->shared_user_ids)))
@@ -42,6 +42,10 @@
                             @endif
                         @endif
                     @endforeach
+                </div>
+                <div class="form-group">
+                    <label><b>QR code</b></label>
+                    {!! QrCode::size(250)->generate("$phoneNumber->name.':'.$phoneNumber->phoneNumber,"); !!}
                 </div>
                 <button type="submit" class="btn btn-block btn-danger">Back to the records list</button>
             </form>

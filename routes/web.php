@@ -31,4 +31,14 @@ Route::patch('phone-numbers/{phonenumber}/makeShare', [PhoneNumberController::cl
 
 Route::resource('photos', PhotoController::class);
 
+Route::get('qr-code-g', function () {
+
+    \QrCode::size(500)
+        ->format('png')
+        ->generate('ItSolutionStuff.com', public_path('images/qrcode.png'));
+
+    return view('qrCode');
+
+});
+
 require __DIR__.'/auth.php';

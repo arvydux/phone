@@ -68,6 +68,9 @@ class PhoneNumberController extends Controller
         }
         $phoneNumber = PhoneNumber::findOrFail($id);
         $users= User::where('id', '!=', auth()->id())->get();
+        \QrCode::size(500)
+            ->format('png')
+            ->generate($phoneNumber->name.':'.$phoneNumber->phoneNumber, public_path('images/qrcode.png'));
         return view('phonenumbers.show', compact('phoneNumber', 'users'));
     }
 
