@@ -104,7 +104,7 @@ class PhoneNumberController extends Controller
             'phonenumber' => 'required|numeric',
         ]);
 
-        PhoneNumber::whereId($id)->update($data);
+        PhoneNumber::where('id', $id)->update($data);
         return redirect('/phone-numbers')->with('success', 'Phone number updated');
     }
 

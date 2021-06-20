@@ -2,14 +2,20 @@
 
 @section('main')
 
-    <div class="mt-5">
-        <h1 class="display-5">Contacts created by "{{auth()->user()->name}}"</h1>
+    <div class="mt-4">
+        <div class="col-md-12 text-right">
+            <a href="{{ route('phone-numbers.create')}}" class="btn btn-success">Create record</a>
+        </div>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Contacts created by "{{auth()->user()->name}}"
+        </h2>
+    </div>
         @if(session()->get('success'))
             <div class="alert alert-success">
                 {{ session()->get('success') }}
             </div>
         @endif
-        <table class="table">
+        <table class="table mt-4">
             <thead>
             <tr class="table-primary">
                 <td># ID</td>
@@ -31,15 +37,15 @@
                         @endif
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('phone-numbers.show', $phoneNumber->id)}}" class="btn btn-success btn-sm">Show</a>
+                        <a href="{{ route('phone-numbers.show', $phoneNumber->id)}}" class="btn btn-success">Show</a>
                         @if ($phoneNumber->user_id == auth()->id())
-                        <a href="{{ route('phone-numbers.edit', $phoneNumber->id)}}" class="btn btn-success btn-sm">Edit</a>
+                        <a href="{{ route('phone-numbers.edit', $phoneNumber->id)}}" class="btn btn-success">Edit</a>
                         <form action="{{ route('phone-numbers.destroy', $phoneNumber->id)}}" method="post" style="display: inline-block">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                            <button class="btn btn-danger" type="submit">Delete</button>
                         </form>
-                        <a href="{{ route('phone-numbers.share', $phoneNumber->id)}}" class="btn btn-primary btn-sm">Share</a>
+                        <a href="{{ route('phone-numbers.share', $phoneNumber->id)}}" class="btn btn-primary">Share</a>
                         @endif
                     </td>
                 </tr>

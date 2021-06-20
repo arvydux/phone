@@ -16,7 +16,7 @@
                     </ul>
                 </div>
             @endif
-            <form method="get" action="{{ route('phoneNumbers.index', $phoneNumber->id) }}">
+            <form method="get" action="{{ route('phone-numbers.index', $phoneNumber->id) }}">
                 <div class="form-group">
                     <label>Name</label>
                     <input type="text" class="form-control" value="{{ $phoneNumber->name }}" />
