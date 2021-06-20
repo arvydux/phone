@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Photo;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\PhoneNumber;
@@ -51,6 +52,21 @@ class PhoneNumberController extends Controller
             'user_id' => auth()->id()
         ]);
         $phoneNumber->save();
+
+        if ($request->hasFile('file')) {
+
+            $request->validate([
+                'image' => 'mimes:jpeg,bmp,png'
+            ]);
+
+            $request->file->store('photo', 'public');
+
+            $product = new Photo([
+                "user_id" => $phoneNumber->id,
+                "file_path" => $request->file->hashName()
+            ]);
+            $product->save(); // Finally, save the record.
+        }
         return redirect('/phone-numbers')->with('success', 'Phone number saved!');
     }
 
@@ -67,11 +83,14 @@ class PhoneNumberController extends Controller
             abort(403);
         }
         $phoneNumber = PhoneNumber::findOrFail($id);
-        $users= User::where('id', '!=', auth()->id())->get();
+        $users = User::where('id', '!=', auth()->id())->get();
         \QrCode::size(500)
             ->format('png')
             ->generate($phoneNumber->name.':'.$phoneNumber->phoneNumber, public_path('images/qrcode.png'));
-        return view('phonenumbers.show', compact('phoneNumber', 'users'));
+        $photo = Photo::where('user_id', $phoneNumber->id)->first();
+        if(isset($photo->file_path))
+        $photo = $photo->file_path;
+        return view('phonenumbers.show', compact('phoneNumber', 'users', 'photo'));
     }
 
     /**

@@ -16,7 +16,7 @@
                     </ul>
                 </div>
             @endif
-            <form method="post" action="{{ route('phone-numbers.store') }}">
+            <form method="post" action="{{ route('phone-numbers.store') }}" enctype="multipart/form-data">
                 <div class="form-group">
                     @csrf
                     <label for="name">Name</label>
@@ -25,6 +25,10 @@
                 <div class="form-group">
                     <label for="phone">Phone</label>
                     <input type="tel" class="form-control" name="phone-number"/>
+                </div>
+                <div class="form-group">
+                    <label for="Photo">Photo</label><br>
+                    <input type="file" name="file">
                 </div>
                 <button type="submit" class="btn btn-block btn-primary">Add a phone number</button>
             </form>

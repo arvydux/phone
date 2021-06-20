@@ -18,6 +18,13 @@
             @endif
             <form method="get" action="{{ route('phone-numbers.index', $phoneNumber->id) }}">
                 <div class="form-group">
+                    @if(isset($photo))
+                        <img src="{{asset("storage/photo/".$photo)}}" alt="">
+                    @else
+                        <img src="{{asset("storage/person.png")}}" alt="">
+                    @endif
+                </div>
+                <div class="form-group">
                     <label><b>Name</b></label>
                     <input type="text" name="name" class="form-control" value="{{ $phoneNumber->name }}" />
                 </div>
@@ -35,13 +42,13 @@
                 </div>
                 <div class="form-group">
                     <label><b>Shared with:</b></label><br>
-                    @foreach ($users as $user)
-                        @if ($phoneNumber->shared_user_ids != null)
-                            @if (in_array($user->id, json_decode($phoneNumber->shared_user_ids)))
-                                <label>- {{ $user->name }}</label><br>
+                        @foreach ($users as $user)
+                            @if ($phoneNumber->shared_user_ids != null)
+                                @if (in_array($user->id, json_decode($phoneNumber->shared_user_ids)))
+                                    <label>- {{ $user->name }}</label><br>
+                                @endif
                             @endif
-                        @endif
-                    @endforeach
+                        @endforeach
                 </div>
                 <div class="form-group">
                     <label><b>QR code</b></label>
