@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PhotoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PhoneNumberController;
 
@@ -28,5 +29,6 @@ Route::get('phone-numbers/{phonenumber}/share', [PhoneNumberController::class, '
 Route::patch('phone-numbers/{phonenumber}/makeShare', [PhoneNumberController::class, 'makeShare'])
     ->name('phone-numbers.makeShare')->middleware(['auth']);
 
+Route::resource('photos', PhotoController::class);
 
 require __DIR__.'/auth.php';
