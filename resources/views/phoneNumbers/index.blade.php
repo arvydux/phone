@@ -40,8 +40,6 @@
                             <button class="btn btn-danger btn-sm" type="submit">Delete</button>
                         </form>
                         <a href="{{ route('phone-numbers.share', $phoneNumber->id)}}" class="btn btn-primary btn-sm">Share</a>
-                        @else
-                            <p class="text-danger">Not allowed any actions</p>
                         @endif
                     </td>
                 </tr>

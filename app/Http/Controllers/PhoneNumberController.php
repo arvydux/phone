@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\PhoneNumber;
+use Illuminate\Support\Facades\Gate;
 
 class PhoneNumberController extends Controller
 {
@@ -61,6 +62,10 @@ class PhoneNumberController extends Controller
      */
     public function show($id)
     {
+        $phoneNumber = PhoneNumber::find($id);
+        if (! Gate::allows('view-phone-number', $phoneNumber)) {
+            abort(403);
+        }
         $phoneNumber = PhoneNumber::findOrFail($id);
         $users= User::where('id', '!=', auth()->id())->get();
         return view('phonenumbers.show', compact('phoneNumber', 'users'));
@@ -75,6 +80,9 @@ class PhoneNumberController extends Controller
     public function edit($id)
     {
         $phoneNumber = PhoneNumber::findOrFail($id);
+        if (! Gate::allows('update-phone-number', $phoneNumber)) {
+            abort(403);
+        }
         return view('phonenumbers.update', compact('phoneNumber'));
     }
 
@@ -87,6 +95,10 @@ class PhoneNumberController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $phoneNumber = PhoneNumber::find($id);
+        if (! Gate::allows('update-phone-number', $phoneNumber)) {
+            abort(403);
+        }
         $data = $request->validate([
             'name' => 'required|max:255',
             'phonenumber' => 'required|numeric',
@@ -99,6 +111,10 @@ class PhoneNumberController extends Controller
 
     public function share($id)
     {
+        $phoneNumber = PhoneNumber::find($id);
+        if (! Gate::allows('share-phone-number', $phoneNumber)) {
+            abort(403);
+        }
         $phoneNumber = PhoneNumber::findOrFail($id);
         $users= User::where('id', '!=', auth()->id())->get();
         return view('phonenumbers.share', compact('phoneNumber', 'users'));
