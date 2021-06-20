@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\PhoneNumber;
 use Illuminate\Support\Facades\Gate;
+use Spatie\Image\Image;
 
 class PhoneNumberController extends Controller
 {
@@ -59,6 +60,8 @@ class PhoneNumberController extends Controller
                 'image' => 'mimes:jpeg,bmp,png'
             ]);
 
+            Image::load($request->file)->width(250)->height(250)->save();
+
             $request->file->store('photo', 'public');
 
             $product = new Photo([
@@ -90,6 +93,7 @@ class PhoneNumberController extends Controller
         $photo = Photo::where('user_id', $phoneNumber->id)->first();
         if(isset($photo->file_path))
         $photo = $photo->file_path;
+
         return view('phonenumbers.show', compact('phoneNumber', 'users', 'photo'));
     }
 

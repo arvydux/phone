@@ -41,7 +41,7 @@
                     <label> {{ $user->name }}</label><br>
                 @endforeach
                 </div>
-                <button type="submit" class="btn btn-block btn-danger">Share</button>
+                <button type="submit" class="btn btn-block btn-primary">Share</button>
             </form>
         </div>
     </div>

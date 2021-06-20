@@ -21,7 +21,7 @@
                     @if(isset($photo))
                         <img src="{{asset("storage/photo/".$photo)}}" alt="">
                     @else
-                        <img src="{{asset("storage/person.png")}}" alt="">
+                        <img src="{{asset("storage/person.png")}}" alt="" class="w-25">
                     @endif
                 </div>
                 <div class="form-group">
@@ -54,7 +54,7 @@
                     <label><b>QR code</b></label>
                     {!! QrCode::size(250)->generate("$phoneNumber->name.':'.$phoneNumber->phoneNumber,"); !!}
                 </div>
-                <button type="submit" class="btn btn-block btn-danger">Back to the records list</button>
+                <button type="submit" class="btn btn-block btn-primary">Back to the records list</button>
             </form>
         </div>
     </div>

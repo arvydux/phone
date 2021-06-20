@@ -27,7 +27,7 @@
                     <label for="phone">Phone</label>
                     <input type="tel" class="form-control" name="phonenumber" value="{{ $phoneNumber->phonenumber }}" />
                 </div>
-                <button type="submit" class="btn btn-block btn-danger">Update</button>
+                <button type="submit" class="btn btn-block btn-primary">Update</button>
             </form>
         </div>
     </div>
