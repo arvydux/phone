@@ -17,9 +17,3 @@ use App\Http\Controllers\API\PhoneNumberController;
 
 Route::post('register', [PassportAuthController::class, 'register']);
 Route::post('login', [PassportAuthController::class, 'login']);
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('get-user', [PassportAuthController::class, 'userInfo']);
-    Route::apiResource('phoneNumbers', PhoneNumberController::class);
-});
-
