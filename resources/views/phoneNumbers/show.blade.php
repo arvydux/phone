@@ -21,7 +21,7 @@
                     @if(isset($photo))
                         <img src="{{asset("storage/photo/".$photo)}}" alt="">
                     @else
-                        <img src="{{asset("storage/person.png")}}" alt="" class="w-25">
+                        <img src="{{url('images/person.jpg')}}" alt="" class="w-25">
                     @endif
                 </div>
                 <div class="form-group">
