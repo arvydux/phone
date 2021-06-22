@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Photo;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\PhoneNumber;
 use Illuminate\Support\Facades\Gate;
-use Spatie\Image\Image;
+use App\Traits\PhotoTrait;
 
 class PhoneNumberController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use PhotoTrait;
+
     public function index()
     {
         $phoneNumbers = PhoneNumber::with('user')
@@ -24,22 +20,11 @@ class PhoneNumberController extends Controller
         return view('phonenumbers.index', compact('phoneNumbers'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('phonenumbers.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -53,32 +38,10 @@ class PhoneNumberController extends Controller
             'user_id' => auth()->id()
         ]);
         $phoneNumber->save();
-
-        if ($request->hasFile('file')) {
-
-            $request->validate([
-                'image' => 'mimes:jpeg,bmp,png'
-            ]);
-
-            Image::load($request->file)->width(250)->height(250)->save();
-
-            $request->file->store('photo', 'public');
-
-            $product = new Photo([
-                "user_id" => $phoneNumber->id,
-                "file_path" => $request->file->hashName()
-            ]);
-            $product->save(); // Finally, save the record.
-        }
+        $this->storePhoto($request, $phoneNumber->id);
         return redirect('/phone-numbers')->with('success', 'Phone number saved!');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $phoneNumber = PhoneNumber::find($id);
@@ -90,35 +53,20 @@ class PhoneNumberController extends Controller
         \QrCode::size(500)
             ->format('png')
             ->generate($phoneNumber->name.':'.$phoneNumber->phoneNumber, public_path('images/qrcode.png'));
-        $photo = Photo::where('user_id', $phoneNumber->id)->first();
-        if(isset($photo->file_path))
-        $photo = $photo->file_path;
-
+        $photo = $this->showPhoto($phoneNumber->id);
         return view('phonenumbers.show', compact('phoneNumber', 'users', 'photo'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $phoneNumber = PhoneNumber::findOrFail($id);
         if (! Gate::allows('update-phone-number', $phoneNumber)) {
             abort(403);
         }
-        return view('phonenumbers.update', compact('phoneNumber'));
+        $photo = $this->showPhoto($phoneNumber->id);
+        return view('phonenumbers.update', compact('phoneNumber', 'photo'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $phoneNumber = PhoneNumber::find($id);
@@ -153,21 +101,27 @@ class PhoneNumberController extends Controller
         $phoneNumber->shared_user_ids = $userIDs;
         $phoneNumber->save();
         return redirect('/phone-numbers')->with('success', 'Phone number shared');
-        //$phoneNumber = PhoneNumber::findOrFail($id);
-        //return view('phoneNumbers.makeShare', compact('phoneNumber'));
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function updatePersonPhoto(Request $request, $id)
+    {
+        if ($this->updatePhoto($request, $id))
+        $request->session()->flash('success', 'Photo updated');
+        return redirect()->route('phone-numbers.edit', $id);
+    }
+
+    public function deletePersonPhoto(Request $request, $id)
+    {
+        if ($this->deletePhoto($id))
+        $request->session()->flash('success', 'Photo deleted');
+        return redirect()->route('phone-numbers.edit', $id);
+    }
+
     public function destroy($id)
     {
         $phoneNumber = PhoneNumber::findOrFail($id);
         $phoneNumber->delete();
-
         return redirect('/phone-numbers')->with('success', 'Phone number deleted');
     }
 }

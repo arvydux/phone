@@ -7,6 +7,11 @@
         </div>
 
         <div class="card-body">
+            @if(session()->get('success'))
+                <div class="alert alert-success">
+                    {{ session()->get('success') }}
+                </div>
+            @endif
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -16,7 +21,24 @@
                     </ul>
                 </div>
             @endif
-            <form method="post" action="{{ route('phone-numbers.update', $phoneNumber->id) }}">
+                <div class="form-group">
+                    @if(isset($photo))
+                        <img src="{{asset("storage/photo/".$photo)}}" alt="">
+                    @else
+                        <img src="{{url('images/person.jpg')}}" alt="" class="w-25">
+                    @endif
+                </div>
+                <form method="post" action="{{ route('photos.update', $phoneNumber->id) }}"  enctype="multipart/form-data">
+                    <div class="form-group">
+                        @csrf
+                        <input type="file" name="file">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Change photo</button>
+                        <a href="{{ route('photos.delete', $phoneNumber->id)}}" class="btn btn-success">Delete photo</a>
+                    </div>
+                </form>
+                <form method="post" action="{{ route('phone-numbers.update', $phoneNumber->id) }}">
                 <div class="form-group">
                     @csrf
                     @method('PATCH')

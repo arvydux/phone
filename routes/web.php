@@ -27,9 +27,8 @@ Route::get('phone-numbers/{phonenumber}/share', [PhoneNumberController::class, '
     ->name('phone-numbers.share')->middleware(['auth']);
 Route::patch('phone-numbers/{phonenumber}/makeShare', [PhoneNumberController::class, 'makeShare'])
     ->name('phone-numbers.makeShare')->middleware(['auth']);
-
-Route::resource('photos', PhotoController::class);
-
+Route::post('photos/{id}/update', [PhoneNumberController::class, 'updatePersonPhoto'])->name('photos.update');
+Route::get('photos/{id}/delete', [PhoneNumberController::class, 'deletePersonPhoto'])->name('photos.delete');
 Route::get('qr-code-g', function () {
 
     \QrCode::size(500)
