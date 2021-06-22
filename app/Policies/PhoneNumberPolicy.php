@@ -30,8 +30,8 @@ class PhoneNumberPolicy
      */
     public function view(User $user, PhoneNumber $phoneNumber)
     {
-        if ($phoneNumber->shared_user_ids == null) $phoneNumber->shared_user_ids = [];
-        return ($user->id === $phoneNumber->user_id) || (in_array($user->id, $phoneNumber->shared_user_ids));
+        if ($phoneNumber->shared_user_ids == null) $phoneNumber->shared_user_ids = '[]';
+        return ($user->id === $phoneNumber->user_id) || (in_array($user->id, json_decode($phoneNumber->shared_user_ids)));
     }
 
     /**

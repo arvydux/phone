@@ -44,7 +44,7 @@ class PhoneNumberController extends Controller
 
     public function show($id)
     {
-        $phoneNumber = PhoneNumber::find($id);
+        $phoneNumber = PhoneNumber::findOrFail($id);
         if (! Gate::allows('view-phone-number', $phoneNumber)) {
             abort(403);
         }
