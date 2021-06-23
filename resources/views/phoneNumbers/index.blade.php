@@ -45,7 +45,7 @@
                             @method('DELETE')
                             <button class="btn btn-danger" type="submit">Delete</button>
                         </form>
-                        <a href="{{ route('phone-numbers.share', $phoneNumber->id)}}" class="btn btn-primary">Share</a>
+                        <a href="{{ route('phone-numbers.showShare', $phoneNumber->id)}}" class="btn btn-primary">Share</a>
                         @endif
                     </td>
                 </tr>

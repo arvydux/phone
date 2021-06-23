@@ -24,19 +24,17 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::resource('phone-numbers', PhoneNumberController::class)->middleware(['auth']);
-Route::get('phone-numbers/{id}/share', [PhoneNumberController::class, 'share'])
-    ->name('phone-numbers.share')->middleware(['auth']);
-Route::patch('phone-numbers/{id}/makeShare', [PhoneNumberController::class, 'makeShare'])
+Route::get('phone-numbers/{id}/share', [PhoneNumberController::class, 'showShare'])
+    ->name('phone-numbers.showShare')->middleware(['auth']);
+Route::patch('phone-numbers/{id}/make-share', [PhoneNumberController::class, 'makeShare'])
     ->name('phone-numbers.makeShare')->middleware(['auth']);
 Route::post('photos/{id}/update', [PhoneNumberController::class, 'updatePersonPhoto'])->name('photos.update');
 Route::get('photos/{id}/delete', [PhoneNumberController::class, 'deletePersonPhoto'])->name('photos.delete');
 Route::resource('phone-numbers/{id}/phones', PhoneController::class)->middleware(['auth']);
 Route::get('qr-code-g', function () {
-
     \QrCode::size(500)
         ->format('png')
         ->generate('ItSolutionStuff.com', public_path('images/qrcode.png'));
-
     return view('qrCode');
 
 });

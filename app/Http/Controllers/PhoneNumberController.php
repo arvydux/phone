@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Phone;
 use App\Models\User;
 use App\Services\PhotoService;
+use App\Services\ShareService;
 use Illuminate\Http\Request;
 use App\Models\PhoneNumber;
 use Illuminate\Support\Facades\Gate;
@@ -13,9 +14,10 @@ class PhoneNumberController extends Controller
 {
     protected $userService;
 
-    public function __construct(PhotoService $photoService)
+    public function __construct(PhotoService $photoService, ShareService $shareService)
     {
         $this->photoService = $photoService;
+        $this->shareService = $shareService;
     }
 
     public function index()
@@ -89,25 +91,14 @@ class PhoneNumberController extends Controller
     }
 
 
-    public function share($id)
+    public function showShare($id)
     {
-        $phoneNumber = PhoneNumber::find($id);
-        if (! Gate::allows('share-phone-number', $phoneNumber)) {
-            abort(403);
-        }
-        $phoneNumber = PhoneNumber::findOrFail($id);
-        $users= User::where('id', '!=', auth()->id())->get();
-        return view('phonenumbers.share', compact('phoneNumber', 'users'));
+        return $this->shareService->show($id);
     }
 
     public function makeShare(Request $request, $id)
     {
-        $userIDs = $request->input('user-id');
-        $phoneNumber = PhoneNumber::find($id);
-        $phoneNumber->shared_user_ids = $userIDs;
-        $phoneNumber->save();
-        return redirect('/phone-numbers')->with('success', 'Phone number shared');
-
+        return $this->shareService->make($request, $id);
     }
 
     public function updatePersonPhoto(Request $request, $id)
