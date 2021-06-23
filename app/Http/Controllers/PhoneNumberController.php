@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Phone;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\PhoneNumber;
@@ -29,7 +30,7 @@ class PhoneNumberController extends Controller
     {
         $request->validate([
             'name'=>'required',
-            'phone-number'=>'required',
+            'phone-number'=>'required|numeric',
         ]);
 
         $phoneNumber = new PhoneNumber([
@@ -48,13 +49,13 @@ class PhoneNumberController extends Controller
         if (! Gate::allows('view-phone-number', $phoneNumber)) {
             abort(403);
         }
-        $phoneNumber = PhoneNumber::findOrFail($id);
         $users = User::where('id', '!=', auth()->id())->get();
         \QrCode::size(500)
             ->format('png')
             ->generate($phoneNumber->name.':'.$phoneNumber->phoneNumber, public_path('images/qrcode.png'));
         $photo = $this->showPhoto($phoneNumber->id);
-        return view('phonenumbers.show', compact('phoneNumber', 'users', 'photo'));
+        $phones = Phone::where('phone_number_id', $id)->get();
+        return view('phonenumbers.show', compact('phoneNumber', 'users', 'photo', 'phones'));
     }
 
     public function edit($id)
@@ -108,14 +109,14 @@ class PhoneNumberController extends Controller
     {
         if ($this->updatePhoto($request, $id))
         $request->session()->flash('success', 'Photo updated');
-        return redirect()->route('phone-numbers.edit', $id);
+        return back();
     }
 
     public function deletePersonPhoto(Request $request, $id)
     {
         if ($this->deletePhoto($id))
         $request->session()->flash('success', 'Photo deleted');
-        return redirect()->route('phone-numbers.edit', $id);
+        return back();
     }
 
     public function destroy($id)

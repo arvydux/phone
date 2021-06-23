@@ -50,7 +50,7 @@ class PhotoController extends Controller
                 "phone_number_id" => $id,
                 "file_name" => $request->file->hashName()
             ]);
-            $product->save(); // Finally, save the record.
+            $product->save();
         }
     }
 

@@ -41,6 +41,14 @@
                     <input type="text"  name="updated-at" class="form-control" value="{{ $phoneNumber->updated_at }}" />
                 </div>
                 <div class="form-group">
+                    <label for="phones"><b>Additional phone numbers</b></label><br>
+                    @foreach ($phones as $phone)
+                        <div class="form-group">
+                            <input type="text" class=" w-25 p-1" name="number" value="{{ $phone->number }}" />
+                        </div>
+                    @endforeach
+                </div>
+                <div class="form-group">
                     <label><b>Shared with:</b></label><br>
                         @foreach ($users as $user)
                             @if ($phoneNumber->shared_user_ids != null)

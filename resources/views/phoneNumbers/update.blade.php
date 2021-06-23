@@ -49,6 +49,10 @@
                     <label for="phone">Phone</label>
                     <input type="tel" class="form-control" name="phonenumber" value="{{ $phoneNumber->phonenumber }}" />
                 </div>
+                <div class="form-group">
+                    <a href="{{ route('phones.index', ['id' => $phoneNumber->id])}}" class="btn btn-success">Additional phones</a>
+                    <a href="{{ route('phone-numbers.share', $phoneNumber->id)}}" class="btn btn-success">Share with others</a>
+                </div>
                 <button type="submit" class="btn btn-block btn-primary">Update</button>
             </form>
         </div>
