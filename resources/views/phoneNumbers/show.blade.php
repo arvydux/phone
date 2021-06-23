@@ -26,25 +26,25 @@
                 </div>
                 <div class="form-group">
                     <label><b>Name</b></label>
-                    <input type="text" name="name" class="form-control" value="{{ $phoneNumber->name }}" />
+                    <label>{{ $phoneNumber->name }}</label>
                 </div>
                 <div class="form-group">
                     <label><b>Phone</b></label>
-                    <input type="text" name="phone"  class="form-control" value="{{ $phoneNumber->phonenumber }}" />
+                    <label>{{ $phoneNumber->phonenumber }}</label>
                 </div>
                 <div class="form-group">
                     <label><b>Created by</b></label>
-                    <input type="text"  name="owner" class="form-control" value="{{ $phoneNumber->user->name}}" />
+                    <label>{{ $phoneNumber->user->name}}</label>
                 </div>
                 <div class="form-group">
                     <label><b>Last updated at</b></label>
-                    <input type="text"  name="updated-at" class="form-control" value="{{ $phoneNumber->updated_at }}" />
+                    <label>{{ $phoneNumber->updated_at }}</label>
                 </div>
                 <div class="form-group">
                     <label for="phones"><b>Additional phone numbers</b></label><br>
                     @foreach ($phones as $phone)
                         <div class="form-group">
-                            <input type="text" class=" w-25 p-1" name="number" value="{{ $phone->number }}" />
+                            <label>{{ $phone->number }}</label>
                         </div>
                     @endforeach
                 </div>
