@@ -8,12 +8,13 @@ use App\Services\PhoneNumberService;
 use App\Services\PhotoService;
 use App\Services\ShareService;
 use Illuminate\Http\Request;
-use App\Models\PhoneNumber;
-use Illuminate\Support\Facades\Gate;
+
 
 class PhoneNumberController extends Controller
 {
-    protected $userService;
+    protected $photoService,
+              $shareService,
+              $phoneNumberService;
 
     public function __construct(PhotoService $photoService, ShareService $shareService, PhoneNumberService $phoneNumberService)
     {
