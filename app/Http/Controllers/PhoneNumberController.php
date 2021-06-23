@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Phone;
 use App\Models\User;
+use App\Services\PhoneNumberService;
 use App\Services\PhotoService;
 use App\Services\ShareService;
 use Illuminate\Http\Request;
@@ -14,17 +15,17 @@ class PhoneNumberController extends Controller
 {
     protected $userService;
 
-    public function __construct(PhotoService $photoService, ShareService $shareService)
+    public function __construct(PhotoService $photoService, ShareService $shareService, PhoneNumberService $phoneNumberService)
     {
         $this->photoService = $photoService;
         $this->shareService = $shareService;
+        $this->phoneNumberService = $phoneNumberService;
     }
 
     public function index()
     {
-        $phoneNumbers = PhoneNumber::with('user')
-            ->where('user_id', auth()->id())
-            ->orWhereJsonContains('shared_user_ids', (string)auth()->id())->get();
+        $phoneNumbers = $this->phoneNumberService->index();
+
         return view('phonenumbers.index', compact('phoneNumbers'));
     }
 
@@ -35,59 +36,42 @@ class PhoneNumberController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name'=>'required',
-            'phone-number'=>'required|numeric',
-        ]);
-
-        $phoneNumber = new PhoneNumber([
-            'name' => $request->get('name'),
-            'phonenumber' => $request->get('phone-number'),
-            'user_id' => auth()->id()
-        ]);
-        $phoneNumber->save();
+        $phoneNumber = $this->phoneNumberService->store($request);
         $this->photoService->store($request, $phoneNumber->id);
+
         return redirect('/phone-numbers')->with('success', 'Phone number saved!');
     }
 
     public function show($id)
     {
-        $phoneNumber = PhoneNumber::findOrFail($id);
-        if (! Gate::allows('view-phone-number', $phoneNumber)) {
-            abort(403);
-        }
+        $phoneNumber = $this->phoneNumberService->show($id);
         $users = User::where('id', '!=', auth()->id())->get();
-        \QrCode::size(500)
-            ->format('png')
-            ->generate($phoneNumber->name.':'.$phoneNumber->phoneNumber, public_path('images/qrcode.png'));
         $photo = $this->photoService->show($phoneNumber->id);
         $phones = Phone::where('phone_number_id', $id)->get();
+
         return view('phonenumbers.show', compact('phoneNumber', 'users', 'photo', 'phones'));
     }
 
     public function edit($id)
     {
-        $phoneNumber = PhoneNumber::findOrFail($id);
-        if (! Gate::allows('update-phone-number', $phoneNumber)) {
-            abort(403);
-        }
+        $phoneNumber = $this->phoneNumberService->edit($id);
         $photo = $this->photoService->show($phoneNumber->id);
+
         return view('phonenumbers.update', compact('phoneNumber', 'photo'));
     }
 
     public function update(Request $request, $id)
     {
-        $phoneNumber = PhoneNumber::find($id);
-        if (! Gate::allows('update-phone-number', $phoneNumber)) {
-            abort(403);
-        }
-        $data = $request->validate([
-            'name' => 'required|max:255',
-            'phonenumber' => 'required|numeric',
-        ]);
+        $this->phoneNumberService->update($request, $id);
 
-        PhoneNumber::where('id', $id)->update($data);
         return redirect('/phone-numbers')->with('success', 'Phone number updated');
+    }
+
+    public function destroy($id)
+    {
+        $this->phoneNumberService->destroy($id);
+
+        return redirect('/phone-numbers')->with('success', 'Phone number deleted');
     }
 
 
@@ -105,6 +89,7 @@ class PhoneNumberController extends Controller
     {
         if ($this->photoService->update($request, $id))
         $request->session()->flash('success', 'Photo updated');
+
         return back();
     }
 
@@ -112,13 +97,8 @@ class PhoneNumberController extends Controller
     {
         if ($this->photoService->delete($id))
         $request->session()->flash('success', 'Photo deleted');
+
         return back();
     }
 
-    public function destroy($id)
-    {
-        $phoneNumber = PhoneNumber::findOrFail($id);
-        $phoneNumber->delete();
-        return redirect('/phone-numbers')->with('success', 'Phone number deleted');
-    }
 }
