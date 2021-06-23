@@ -6,11 +6,16 @@ use App\Models\Phone;
 use App\Models\PhoneNumber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use App\Traits\PhotoTrait;
+use App\Services\PhotoService;
 
 class PhoneController extends Controller
 {
-    use PhotoTrait;
+    protected $userService;
+
+    public function __construct(PhotoService $photoService)
+    {
+        $this->photoService = $photoService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +28,7 @@ class PhoneController extends Controller
             abort(403);
         }
         $phoneNumber = PhoneNumber::findOrFail($id);
-        $photo = $this->showPhoto($phoneNumber->id);
+        $photo = $this->photoService->show($phoneNumber->id);
         $phones = Phone::where('phone_number_id', $id)->get();
         return view('phones.index', compact('phoneNumber','photo', 'phones'));
     }
@@ -73,7 +78,7 @@ class PhoneController extends Controller
      */
     public function edit($id)
     {
-        return 23333;
+
     }
 
     /**
@@ -88,7 +93,6 @@ class PhoneController extends Controller
         $data = $request->validate([
             'number' => 'required|numeric',
         ]);
-
         Phone::where('id', $phoneId)->update($data);
         return back()->with('success', 'Additional phone number updated');
     }

@@ -63,7 +63,7 @@
                 </div>
             </form>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-block btn-primary">Back to the records list</button>
+                    <a href="{{ route('phone-numbers.index')}}" class="btn btn-block btn-primary">Back to the records list</a>
                 </div>
         </div>
     </div>

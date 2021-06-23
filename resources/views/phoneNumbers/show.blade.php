@@ -62,7 +62,7 @@
                     <label><b>QR code</b></label>
                     {!! QrCode::size(250)->generate("$phoneNumber->name.':'.$phoneNumber->phoneNumber,"); !!}
                 </div>
-                <button type="submit" class="btn btn-block btn-primary">Back to the records list</button>
+                <a href="{{ route('phone-numbers.index')}}" class="btn btn-block btn-primary">Back to the records list</a>
             </form>
         </div>
     </div>

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Traits;
+namespace App\Services;
 
 use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Image\Image;
 
-trait PhotoTrait {
-
-    public function storePhoto(Request $request, $id)
+class PhotoService
+{
+    public function store(Request $request, $id)
     {
         if ($request->hasFile('file')) {
             $request->validate([
@@ -21,18 +21,18 @@ trait PhotoTrait {
                 "phone_number_id" => $id,
                 "file_name" => $request->file->hashName()
             ]);
-            $photo->save(); // Finally, save the record.
+            $photo->save();
         }
     }
 
-    public function showPhoto($id)
+    public function show($id)
     {
         $photo = Photo::where('phone_number_id', $id)->first();
         if (isset($photo->file_name))
-        return $photo->file_name;
+            return $photo->file_name;
     }
 
-    public function updatePhoto(Request $request, $id)
+    public function update(Request $request, $id)
     {
         if ($request->hasFile('file')) {
             $request->validate([
@@ -57,7 +57,7 @@ trait PhotoTrait {
         return false;
     }
 
-    public function deletePhoto($id)
+    public function delete($id)
     {
         $photo = Photo::where('phone_number_id', $id)->first();
         if (isset($photo)) {

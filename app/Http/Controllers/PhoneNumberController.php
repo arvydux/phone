@@ -4,14 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Phone;
 use App\Models\User;
+use App\Services\PhotoService;
 use Illuminate\Http\Request;
 use App\Models\PhoneNumber;
 use Illuminate\Support\Facades\Gate;
-use App\Traits\PhotoTrait;
 
 class PhoneNumberController extends Controller
 {
-    use PhotoTrait;
+    protected $userService;
+
+    public function __construct(PhotoService $photoService)
+    {
+        $this->photoService = $photoService;
+    }
 
     public function index()
     {
@@ -39,7 +44,7 @@ class PhoneNumberController extends Controller
             'user_id' => auth()->id()
         ]);
         $phoneNumber->save();
-        $this->storePhoto($request, $phoneNumber->id);
+        $this->photoService->store($request, $phoneNumber->id);
         return redirect('/phone-numbers')->with('success', 'Phone number saved!');
     }
 
@@ -53,7 +58,7 @@ class PhoneNumberController extends Controller
         \QrCode::size(500)
             ->format('png')
             ->generate($phoneNumber->name.':'.$phoneNumber->phoneNumber, public_path('images/qrcode.png'));
-        $photo = $this->showPhoto($phoneNumber->id);
+        $photo = $this->photoService->show($phoneNumber->id);
         $phones = Phone::where('phone_number_id', $id)->get();
         return view('phonenumbers.show', compact('phoneNumber', 'users', 'photo', 'phones'));
     }
@@ -64,7 +69,7 @@ class PhoneNumberController extends Controller
         if (! Gate::allows('update-phone-number', $phoneNumber)) {
             abort(403);
         }
-        $photo = $this->showPhoto($phoneNumber->id);
+        $photo = $this->photoService->show($phoneNumber->id);
         return view('phonenumbers.update', compact('phoneNumber', 'photo'));
     }
 
@@ -107,14 +112,14 @@ class PhoneNumberController extends Controller
 
     public function updatePersonPhoto(Request $request, $id)
     {
-        if ($this->updatePhoto($request, $id))
+        if ($this->photoService->update($request, $id))
         $request->session()->flash('success', 'Photo updated');
         return back();
     }
 
     public function deletePersonPhoto(Request $request, $id)
     {
-        if ($this->deletePhoto($id))
+        if ($this->photoService->delete($id))
         $request->session()->flash('success', 'Photo deleted');
         return back();
     }
